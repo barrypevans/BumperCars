@@ -10,9 +10,11 @@ public class CarController : MonoBehaviour
     private static readonly float kMaxVelocity = 20;
     private static readonly float kAcceleration = 50f;
     private static readonly float kMaxTurnSpeed = 3;
-    private static readonly float kTurnAcceleration = 4.5f;
+    private static readonly float kTurnAcceleration = 6f;
     private static readonly float kDeceleration = 30f;
 
+    [SerializeField]
+    private int m_playerIndex = 0;
     private Vector2 m_stickLag;
 
     private float ControlAmount
@@ -69,7 +71,7 @@ public class CarController : MonoBehaviour
     private void OnEnable()
     {
         if(null == m_inputManager)
-            m_inputManager = new InputManager(0);
+            m_inputManager = new InputManager(m_playerIndex);
         m_inputManager.Enable();
     }
 
