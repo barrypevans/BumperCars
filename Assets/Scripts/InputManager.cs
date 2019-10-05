@@ -4,42 +4,63 @@ using UnityEngine;
 
 public class InputManager
 {
-    private static InputManager[] InputManagers = new InputManager[4];
-    public static InputManager CreateInputManager(int index)
-    {
-        if (null == InputManagers[index])
-            InputManagers[index] = new InputManager(index);
-        return InputManagers[index];
-    }
 
     private int m_index = 0;
+    private PlayerInput m_playerInput;
 
     public InputManager(int index)
     {
         m_index = index;
+        m_playerInput = new PlayerInput();
+        m_playerInput.Enable();
+        m_playerInput.Movement.LeftStick.performed += context => LeftStick = context.ReadValue<Vector2>();
+        m_playerInput.Movement.RightStick.performed += context => RightStick = context.ReadValue<Vector2>();
+        m_playerInput.Movement.Accelerator.performed += context => Accelecator = context.ReadValue<float>() > .05f;
     }
 
-    public float Horizontal
+
+    public void Enable()
+    {
+        m_playerInput.Enable();
+    }
+
+    public void Disable()
+    {
+        m_playerInput.Disable();
+    }
+
+    public float HorizontalLeft
     {
         get
         {
-            return Input.GetAxis("Horizontal_" + m_index.ToString());
+            return LeftStick.x;
         }
     }
 
-    public float Vertical
+    public float VerticalLeft
     {
         get
         {
-            return Input.GetAxis("Vertical_" + m_index.ToString());
+            return LeftStick.y;
         }
     }
+    public Vector2 LeftStick;
 
-    /*public bool ActionPressed
+    public float HorizontalRight
     {
         get
         {
-            return 
+            return RightStick.x;
         }
-    }*/
+    }
+    public float VerticalRight
+    {
+        get
+        {
+            return RightStick.y;
+        }
+    }
+    public Vector2 RightStick;
+
+    public bool Accelecator;
 }
