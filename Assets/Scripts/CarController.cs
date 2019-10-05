@@ -90,21 +90,19 @@ public class CarController : MonoBehaviour
     {
         if (m_inputManager.Accelecator)
         {
-            m_controlAmount = 1;
+            ControlAmount = 1;
         }
         else
         {
             Velocity -= Velocity.normalized * kDeceleration * Time.deltaTime;
         }
 
-        m_stickLag = Vector2.Lerp(m_stickLag, m_inputManager.LeftStick ,3 * Time.deltaTime);
+        m_stickLag = Vector2.Lerp(m_stickLag, m_inputManager.LeftStick ,.65f * Time.deltaTime);
         m_heading =  Mathf.Atan2(m_stickLag.x, m_stickLag.y) * Mathf.Rad2Deg;
+        
         Velocity += (Quaternion.Euler(0, m_heading, 0) * GetMajorCameraAxis()) * kAcceleration* ControlAmount;
 
         ControlAmount -= 2.0f * Time.deltaTime;
-
-
-
     }
 
     private void UpdateVisuals()

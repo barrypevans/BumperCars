@@ -15,8 +15,10 @@ Material:
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
+  stringTagMap:
+    MotionVector: User
+  disabledShaderPasses:
+  - MOTIONVECTORS
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -71,7 +73,7 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - Color_FD2D49C0: {r: 0.24350302, g: 0.9056604, b: 0.31664827, a: 0}
+    - Color_FD2D49C0: {r: 0.5849056, g: 0.2679528, b: 0.2179601, a: 0}
     - Vector3_9A440139: {r: 0.64, g: -1.34, b: 1.21, a: 0}
     - Vector3_E4AF2341: {r: 0.2, g: 1, b: -1, a: 0}
     - _BaseColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
