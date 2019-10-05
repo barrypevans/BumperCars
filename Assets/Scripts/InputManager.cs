@@ -16,6 +16,7 @@ public class InputManager
         m_playerInput.Movement.LeftStick.performed += context => LeftStick = context.ReadValue<Vector2>();
         m_playerInput.Movement.RightStick.performed += context => RightStick = context.ReadValue<Vector2>();
         m_playerInput.Movement.Accelerator.performed += context => Accelecator = context.ReadValue<float>() > .05f;
+        m_playerInput.Movement.Accelerator.canceled += context => Accelecator = context.ReadValue<float>() > .05f;
     }
 
 
