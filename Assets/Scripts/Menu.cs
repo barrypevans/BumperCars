@@ -29,7 +29,7 @@ public class Menu : MonoBehaviour
     {
         yield return new WaitForSeconds(1);
         camAnim.Play();
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(0.57f); 
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 }
