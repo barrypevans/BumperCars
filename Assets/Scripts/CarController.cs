@@ -8,11 +8,13 @@ public class CarController : MonoBehaviour
 {
 
     private static readonly float kMaxVelocity = 20;
-    private static readonly float kAcceleration = 50f;
-    private static readonly float kMaxTurnSpeed = 3;
-    private static readonly float kTurnAcceleration = 6f;
+    private static readonly float kAcceleration = 2.5f;
+    private static readonly float kMaxTurnSpeed = 50;
+    private static readonly float kTurnAcceleration = 5;
     private static readonly float kDeceleration = 30f;
 
+    private Coroutine m_bumpCo = null;
+    private bool m_isBumping = false;
     [SerializeField]
     private int m_playerIndex = 0;
     private Vector2 m_stickLag;
@@ -26,6 +28,7 @@ public class CarController : MonoBehaviour
         set
         {
             m_controlAmount = Mathf.Max(value, 0);
+            m_controlAmount = Mathf.Min(m_controlAmount, 1);
         }
     }
 
@@ -38,8 +41,19 @@ public class CarController : MonoBehaviour
         set
         {
             m_turnSpeed = Mathf.Min(Mathf.Abs(value), kMaxTurnSpeed) * Mathf.Sign(value);
-            //m_turnSpeed = Mathf.Max(value, 0) ;
         }
+    }
+
+    public void Bump(Vector3 direction)
+    {
+        if(m_bumpCo != null)
+        {
+            StopCoroutine(m_bumpCo);
+        }
+
+        m_isBumping = true;
+        m_bumpCo = StartCoroutine(Co_Bump());
+        Velocity = direction.normalized * 20;
     }
 
     InputManager m_inputManager;
@@ -77,10 +91,16 @@ public class CarController : MonoBehaviour
 
     private void Update()
     {
-        Movement();
-        UpdateVisuals();
-        Tilt();
         
+        Movement();
+        if (!m_isBumping)
+        {
+            UpdateVisuals();
+            Tilt();
+        }
+
+        //if (Input.GetKeyDown(KeyCode.B))
+          //  Bump(Vector3.right);
     }
 
     private void OnDisable()
@@ -90,21 +110,23 @@ public class CarController : MonoBehaviour
 
     private void Movement()
     {
-        if (m_inputManager.Accelecator)
+        if (!m_isBumping)
         {
-            ControlAmount = 1;
-        }
-        else
-        {
-            Velocity -= Velocity.normalized * kDeceleration * Time.deltaTime;
+            if (m_inputManager.Accelecator)
+            {
+                ControlAmount = 1;
+            }
+            else
+            {
+                Velocity -= Velocity.normalized * kDeceleration * Time.deltaTime;
+                ControlAmount -= 2.0f * Time.deltaTime;
+            }
         }
 
-        m_stickLag = Vector2.Lerp(m_stickLag, m_inputManager.LeftStick ,.65f * Time.deltaTime);
-        m_heading =  Mathf.Atan2(m_stickLag.x, m_stickLag.y) * Mathf.Rad2Deg;
-        
-        Velocity += (Quaternion.Euler(0, m_heading, 0) * GetMajorCameraAxis()) * kAcceleration* ControlAmount;
+        m_stickLag = Vector2.Lerp(m_stickLag, m_inputManager.LeftStick, 2.7f * Time.deltaTime);
+        m_heading = Mathf.Atan2(m_stickLag.x, m_stickLag.y) * Mathf.Rad2Deg;
 
-        ControlAmount -= 2.0f * Time.deltaTime;
+        Velocity += (Quaternion.Euler(0, m_heading, 0) * GetMajorCameraAxis()) * kAcceleration * ControlAmount;
     }
 
     private void UpdateVisuals()
@@ -140,6 +162,25 @@ public class CarController : MonoBehaviour
         m_top.localRotation = Quaternion.Slerp(m_top.localRotation, Quaternion.Euler(0, 0, m_inputManager.HorizontalLeft * 8), Time.deltaTime*10);
     }
 
+    private IEnumerator Co_Bump()
+    {
+        ControlAmount = 0;
+        for (int i=0; i<5; ++i)
+        {
+            ControlAmount += .1f;
+            yield return new WaitForSeconds(.25f);
+        }
+        m_isBumping = false;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.collider.tag == "Car")
+        {
+            Bump(Vector3.Normalize(transform.position - collision.collider.transform.position));
+        }
+    }
+
     [SerializeField]
     private Camera m_camera;
     [SerializeField]
@@ -147,5 +188,5 @@ public class CarController : MonoBehaviour
     private Rigidbody m_rigidbody;
     private float m_turnSpeed = 0;
     private float m_heading = 0;
-    private float m_controlAmount = 1;
+    private float m_controlAmount = 0;
 }
