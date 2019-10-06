@@ -23,6 +23,8 @@ public class CarController : MonoBehaviour
     private int m_playerIndex = 0;
     private Vector2 m_stickLag;
 
+    public Color primaryPaintColor = Color.blue;
+
     private float ControlAmount
     {
         get
@@ -185,7 +187,7 @@ public class CarController : MonoBehaviour
         if (collision.collider.tag == "Car")
         {
             Bump(Vector3.Normalize(transform.position - collision.collider.transform.position));
-            LevelManger.Instance.TakeOutTile(collision.contacts[0].point);
+            LevelManger.Instance.TakeOutTile(collision.contacts[0].point,primaryPaintColor, collision.gameObject.GetComponent<CarController>().primaryPaintColor);
         }
     }
 

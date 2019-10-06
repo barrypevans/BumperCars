@@ -45,7 +45,7 @@ public class LevelManger : MonoBehaviour
         }   
     }
 
-    public void TakeOutTile(Vector3 position)
+    public void TakeOutTile(Vector3 position,Color car1, Color car2)
     {
         RaycastHit[] hits = Physics.RaycastAll(position+ Vector3.up, Vector3.down);
        
