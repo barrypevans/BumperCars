@@ -42,7 +42,15 @@ public class CarController : MonoBehaviour
         }
     }
 
-    public Color primaryPaintColor = Color.blue;
+    public Color primaryPaintColor
+    {
+        get
+        {
+            if (null != m_pallette)
+                return m_pallette.Body;
+            return Color.blue;
+        }
+    }
 
     private float ControlAmount
     {
