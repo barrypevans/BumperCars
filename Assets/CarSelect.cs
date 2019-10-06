@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System.Linq;
 public class CarSelect : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class CarSelect : MonoBehaviour
     public List<CarPalletteSO> availablePall = new List<CarPalletteSO>();
     public List<PlayerCustomizer> customizers = new List<PlayerCustomizer>();
     private int m_lockinCount = 0;
+    public Text[] CarNames;
+
     public int lockInCount
     {
         get
@@ -48,6 +51,7 @@ public class CarSelect : MonoBehaviour
         cars[3].Pallette = grey;
 
         availablePall.AddRange(carPallettes);
+        PlayerCustomizer.lockedSkins.Clear();
     }
 
 
@@ -130,6 +134,10 @@ public class CarSelect : MonoBehaviour
                 {
                     currentSkin = value;
                 }
+                m_daddy.CarNames[m_playerIndex].text = m_daddy.carPallettes[currentSkin].name;
+                var color = m_daddy.carPallettes[currentSkin].Body;
+                color.a = 1;
+                m_daddy.CarNames[m_playerIndex].color = color;
             }
         }
         public PlayerCustomizer(int playerIndex, InputManager inputManager, CarSelect daddy, CarController car)
@@ -138,6 +146,10 @@ public class CarSelect : MonoBehaviour
             m_playerIndex = playerIndex;
             m_daddy = daddy;
             m_car = car;
+            m_daddy.CarNames[m_playerIndex].text = m_daddy.carPallettes[currentSkin].name;
+            var color = m_daddy.carPallettes[currentSkin].Body;
+            color.a = 1;
+            m_daddy.CarNames[m_playerIndex].color = color;
         }
 
         public void Update()

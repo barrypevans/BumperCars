@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9f02934f3ba858478698eb08170c9cb, type: 3}
   m_Name: Midnight Strider
   m_EditorClassIdentifier: 
-  CarName: 
+  CarName: Midnight Strider
   Body: {r: 0.09411766, g: 0.09411766, b: 0.09411766, a: 0}
   Seat: {r: 0.2924528, g: 0, b: 0.09865251, a: 0}
   Window: {r: 0.8196079, g: 0.5921569, b: 0.5921569, a: 0}
