@@ -202,6 +202,7 @@ public class CarController : MonoBehaviour
 
     private IEnumerator Co_DeathAnim()
     {
+        AudioManager.instance.CreateOneShot("Falling", 1);
         m_rigidbody.isKinematic = true;
         yield return new WaitForSeconds(.5f);
         var counter = 0;
