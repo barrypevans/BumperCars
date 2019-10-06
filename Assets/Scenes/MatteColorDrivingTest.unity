@@ -185,7 +185,7 @@ PrefabInstance:
     - target: {fileID: 7068853273396075543, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.5023003
+      value: 1.94
       objectReference: {fileID: 0}
     - target: {fileID: 7068853273396075543, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
         type: 3}
@@ -195,7 +195,7 @@ PrefabInstance:
     - target: {fileID: 7068853273396075543, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 5.0021753
+      value: 9.06
       objectReference: {fileID: 0}
     - target: {fileID: 7068853273396075543, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
         type: 3}
@@ -247,6 +247,21 @@ PrefabInstance:
       propertyPath: m_camera
       value: 
       objectReference: {fileID: 1124077270}
+    - target: {fileID: 7068853273396075540, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
+        type: 3}
+      propertyPath: primaryPaintColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7068853273396075540, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
+        type: 3}
+      propertyPath: primaryPaintColor.b
+      value: 0.36895895
+      objectReference: {fileID: 0}
+    - target: {fileID: 7068853273396075540, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
+        type: 3}
+      propertyPath: primaryPaintColor.g
+      value: 0.28773582
+      objectReference: {fileID: 0}
     - target: {fileID: 7068853273396075542, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
         type: 3}
       propertyPath: m_Constraints
@@ -255,12 +270,12 @@ PrefabInstance:
     - target: {fileID: 7068853274705516450, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.79105616
+      value: 0.15213968
       objectReference: {fileID: 0}
     - target: {fileID: 7068853274705516450, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.61174357
+      value: 0.988359
       objectReference: {fileID: 0}
     - target: {fileID: 7068853274705516450, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
         type: 3}
@@ -1031,7 +1046,7 @@ PrefabInstance:
     - target: {fileID: 7068853273396075543, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6.2
+      value: -4.9
       objectReference: {fileID: 0}
     - target: {fileID: 7068853273396075543, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
         type: 3}
@@ -1041,7 +1056,7 @@ PrefabInstance:
     - target: {fileID: 7068853273396075543, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.6
+      value: 9.77
       objectReference: {fileID: 0}
     - target: {fileID: 7068853273396075543, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
         type: 3}
@@ -1093,6 +1108,21 @@ PrefabInstance:
       propertyPath: m_camera
       value: 
       objectReference: {fileID: 1124077270}
+    - target: {fileID: 7068853273396075540, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
+        type: 3}
+      propertyPath: primaryPaintColor.g
+      value: 0.9899418
+      objectReference: {fileID: 0}
+    - target: {fileID: 7068853273396075540, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
+        type: 3}
+      propertyPath: primaryPaintColor.b
+      value: 0.3160377
+      objectReference: {fileID: 0}
+    - target: {fileID: 7068853273396075540, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
+        type: 3}
+      propertyPath: primaryPaintColor.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7068853273396075542, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
         type: 3}
       propertyPath: m_Constraints
@@ -1101,12 +1131,12 @@ PrefabInstance:
     - target: {fileID: 7068853274705516450, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.79105616
+      value: 0.15213968
       objectReference: {fileID: 0}
     - target: {fileID: 7068853274705516450, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.61174357
+      value: 0.988359
       objectReference: {fileID: 0}
     - target: {fileID: 7068853274705516450, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
         type: 3}
@@ -1628,6 +1658,7 @@ GameObject:
   - component: {fileID: 1124077269}
   - component: {fileID: 1124077275}
   - component: {fileID: 1124077273}
+  - component: {fileID: 1124077272}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1700,6 +1731,18 @@ Transform:
   m_Father: {fileID: 438253112}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1124077272
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1124077268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb3f418773e917448838eba18428fe24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1124077273
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1921,7 +1964,7 @@ PrefabInstance:
     - target: {fileID: 7068853273396075543, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.8000002
+      value: 6.34
       objectReference: {fileID: 0}
     - target: {fileID: 7068853273396075543, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
         type: 3}
@@ -1931,7 +1974,7 @@ PrefabInstance:
     - target: {fileID: 7068853273396075543, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 8.2
+      value: 3.6
       objectReference: {fileID: 0}
     - target: {fileID: 7068853273396075543, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
         type: 3}
@@ -1983,6 +2026,21 @@ PrefabInstance:
       propertyPath: m_camera
       value: 
       objectReference: {fileID: 1124077270}
+    - target: {fileID: 7068853273396075540, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
+        type: 3}
+      propertyPath: primaryPaintColor.r
+      value: 0.35834458
+      objectReference: {fileID: 0}
+    - target: {fileID: 7068853273396075540, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
+        type: 3}
+      propertyPath: primaryPaintColor.b
+      value: 0.3160377
+      objectReference: {fileID: 0}
+    - target: {fileID: 7068853273396075540, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
+        type: 3}
+      propertyPath: primaryPaintColor.g
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7068853273396075542, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
         type: 3}
       propertyPath: m_Constraints
@@ -1991,12 +2049,12 @@ PrefabInstance:
     - target: {fileID: 7068853274705516450, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.79105616
+      value: 0.15213968
       objectReference: {fileID: 0}
     - target: {fileID: 7068853274705516450, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.61174357
+      value: 0.988359
       objectReference: {fileID: 0}
     - target: {fileID: 7068853274705516450, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
         type: 3}
@@ -2582,6 +2640,21 @@ PrefabInstance:
       propertyPath: m_camera
       value: 
       objectReference: {fileID: 1124077270}
+    - target: {fileID: 7068853273396075540, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
+        type: 3}
+      propertyPath: primaryPaintColor.g
+      value: 0.80419034
+      objectReference: {fileID: 0}
+    - target: {fileID: 7068853273396075540, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
+        type: 3}
+      propertyPath: primaryPaintColor.r
+      value: 0.2783019
+      objectReference: {fileID: 0}
+    - target: {fileID: 7068853273396075540, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
+        type: 3}
+      propertyPath: primaryPaintColor.b
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7068853273396075542, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
         type: 3}
       propertyPath: m_Constraints
@@ -2590,12 +2663,12 @@ PrefabInstance:
     - target: {fileID: 7068853274705516450, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.79105616
+      value: 0.15213968
       objectReference: {fileID: 0}
     - target: {fileID: 7068853274705516450, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.61174357
+      value: 0.988359
       objectReference: {fileID: 0}
     - target: {fileID: 7068853274705516450, guid: 9dc74be61f047ac4c8d4f9ca8bbabbc5,
         type: 3}

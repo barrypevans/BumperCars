@@ -12,6 +12,7 @@ public class Tile : MonoBehaviour
     }
     public void LerpColor(Color c)
     {
+        pastPaints++;
         if (colorLerp != null)
             StopCoroutine(colorLerp);
 
@@ -21,10 +22,19 @@ public class Tile : MonoBehaviour
     {
         MeshRenderer m = GetComponent<MeshRenderer>();
         Color startValue = new Color(m.material.color.r, m.material.color.g, m.material.color.b);
+        Color endValue = (startValue + c)/2f;
+
+        /*
+        //falloff
+        if (pastPaints >= 4)
+            c.a = .1f;
+        else
+            c.a = (4- pastPaints)/4f;
+            */
         float t = 0;
         while (t < 2f)
         {
-            m.material.SetColor("_BaseColor",Color.Lerp(m.material.color,c,t/2f));
+            m.material.SetColor("_BaseColor", Color.Lerp(startValue,endValue, t/2f));
             t += Time.deltaTime;
             yield return null;
         }

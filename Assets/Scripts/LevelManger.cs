@@ -59,26 +59,38 @@ public class LevelManger : MonoBehaviour
                 var index = tiles.Where(tile => tile.Value == pingTile).First();
                 Color mix = Color.Lerp(car1, car2, .5f);
 
-                tiles[index.Key + new Vector2(1,0)].LerpColor(mix);
-                tiles[index.Key + new Vector2(0,1)].LerpColor(mix);
-                tiles[index.Key + new Vector2(-1,0)].LerpColor(mix);
-                tiles[index.Key + new Vector2(0,-1)].LerpColor(mix);
+                SetRelativeTileColor(index, new Vector2(1, 0), mix);
+                SetRelativeTileColor(index, new Vector2(-1, 0), mix);
+                SetRelativeTileColor(index, new Vector2(0, 1), mix);
+                SetRelativeTileColor(index, new Vector2(0, -1), mix);
 
-                Color mixLight = mix;
-                mixLight.a = .5f;
+                Vector3 colorAmp = new Vector3();
+                Color.RGBToHSV(mix, out colorAmp.x, out colorAmp.y, out colorAmp.z);
+                colorAmp.y *= .7f;
+                colorAmp.z *= 1.1f;
 
-                tiles[index.Key + new Vector2(2, 0)].LerpColor(mixLight);
-                tiles[index.Key + new Vector2(0, 2)].LerpColor(mixLight);
-                tiles[index.Key + new Vector2(-2, 0)].LerpColor(mixLight);
-                tiles[index.Key + new Vector2(0, -2)].LerpColor(mixLight);
-                tiles[index.Key + new Vector2(1, 1)].LerpColor(mixLight);
-                tiles[index.Key + new Vector2(-1, 1)].LerpColor(mixLight);
-                tiles[index.Key + new Vector2(-1, -1)].LerpColor(mixLight);
-                tiles[index.Key + new Vector2(1, -1)].LerpColor(mixLight);
+                mix = Color.HSVToRGB(colorAmp.x, colorAmp.y, colorAmp.z);
+
+                SetRelativeTileColor(index, new Vector2(2, 0), mix);
+                SetRelativeTileColor(index, new Vector2(-2, 0), mix);
+                SetRelativeTileColor(index, new Vector2(0, 2), mix);
+                SetRelativeTileColor(index, new Vector2(0, -2), mix);
+                SetRelativeTileColor(index, new Vector2(1, 1), mix);
+                SetRelativeTileColor(index, new Vector2(1, -1), mix);
+                SetRelativeTileColor(index, new Vector2(-1, 1), mix);
+                SetRelativeTileColor(index, new Vector2(-1, -1), mix);
+
             }
                        
             pingTile.Destroy();
         }
+    }
+
+    private void SetRelativeTileColor(KeyValuePair<Vector2, Tile> index, Vector2 v, Color c)
+    {
+        if(tiles.ContainsKey(index.Key + v))
+            tiles[index.Key + v].LerpColor(c);
+
     }
 
 }
