@@ -72,7 +72,14 @@ public class GameManager : MonoBehaviour
 
     private void AwardWinner(int index)
     {
-        print("Player "+ index.ToString()+ " wins!");
+        print("Player "+ (index+1).ToString()+ " wins!");
+        StartCoroutine(Co_AwardWinner(index));
+    }
+
+    private IEnumerator Co_AwardWinner(int index)
+    {
+        yield return new WaitForSeconds(2);
+        SceneManager.LoadScene("CarSelect");
     }
 
     public void PlayerDied(int index)
