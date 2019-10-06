@@ -24,7 +24,7 @@ public class InputManager
         //m_playerInput.Disable();
     }
 
-    public float HorizontalLeft
+    public float HorizontalLeftStick
     {
         get
         {
@@ -32,7 +32,7 @@ public class InputManager
         }
     }
 
-    public float VerticalLeft
+    public float VerticalLeftStick
     {
         get
         {
@@ -43,18 +43,18 @@ public class InputManager
     {
         get
         {
-            return new Vector2(HorizontalLeft, VerticalLeft);
+            return new Vector2(HorizontalLeftStick, VerticalLeftStick);
         }
     }
 
-    public float HorizontalRight
+    public float HorizontalRightStick
     {
         get
         {
             return RightStick.x;
         }
     }
-    public float VerticalRight
+    public float VerticalRightStick
     {
         get
         {
@@ -78,4 +78,42 @@ public class InputManager
             return Input.GetKeyDown(KeyCode.Joystick1Button0 + 20 * m_index);
         }
     }
+
+    public bool TapLeft
+    {
+        get
+        {
+            if (HorizontalLeftStick < -0.5f && m_canTapLeft)
+            {
+                m_canTapLeft = false;
+                return true;
+            }
+            return false; 
+        }
+    }
+
+    public bool TapRight
+    {
+        get
+        {
+            if (HorizontalLeftStick < -0.5f && m_canTapRight)
+            {
+                m_canTapRight = false;
+                return true;
+            }
+            return false;
+        }
+    }
+
+    private bool m_canTapLeft;
+    private bool m_canTapRight;
+
+    public void Update()
+    {
+        if(HorizontalLeftStick > -0.5f)
+            m_canTapLeft = true;
+        if(HorizontalLeftStick < 0.5f)
+            m_canTapRight = true;
+    }
+
 }
