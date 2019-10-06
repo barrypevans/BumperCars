@@ -203,6 +203,7 @@ public class CarController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        AudioManager.instance.CreateOneShot("Crash", 1);
         if (m_dead) return;
         if (collision.collider.tag == "Car")
         {
