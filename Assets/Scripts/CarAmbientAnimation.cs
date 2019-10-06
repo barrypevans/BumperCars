@@ -15,7 +15,7 @@ public class CarAmbientAnimation : MonoBehaviour
 
     void Update()
     {
-        float noise = Mathf.Abs(Mathf.PerlinNoise(Time.time* bounceSpeed, 0))* bounceScale;
+        float noise = Mathf.Abs(Mathf.PerlinNoise(Time.time * bounceSpeed, 0)) * bounceScale;
         transform.localScale = originalScale + new Vector3(.5f*noise, bounceScale - noise, .5f * noise);
     }
 }

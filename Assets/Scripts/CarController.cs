@@ -175,9 +175,11 @@ public class CarController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.collider.tag == "Car")
+       
+        if (collision.collider.tag == "Car")
         {
             Bump(Vector3.Normalize(transform.position - collision.collider.transform.position));
+            LevelManger.Instance.TakeOutTile(collision.contacts[0].point);
         }
     }
 
