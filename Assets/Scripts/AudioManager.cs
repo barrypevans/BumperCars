@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class AudioManager : MonoBehaviour
 {
@@ -45,9 +46,10 @@ public class AudioManager : MonoBehaviour
                 print("No clips detected in directory: 'Resources>Audio'");
             }
 
-
-            //CreateRandomLoop( new string[]{"ToyHonk","RegularCarShortHonk"}, new Vector2(.5f,1), new Vector2(.9f,1.1f), new Vector2(.3f,1f));
-
+            //prepare future scene loads
+            SceneManager.sceneLoaded += OnSceneLoad;
+            //mention first scene load
+            OnSceneLoad(SceneManager.GetActiveScene(), LoadSceneMode.Single);
         }
     }
 
@@ -65,14 +67,17 @@ public class AudioManager : MonoBehaviour
     }
     public AudioLoop CreateLoop(string s, float volume, bool startLoud)
     {
-        AudioSource loop = Camera.main.gameObject.AddComponent<AudioSource>();
-        loop.clip = FindClip(s);
-        loop.loop = true;
-        loop.name = loop.clip.name;
-        loop.Play();
-        Loops.Add(new AudioLoop(loop, volume, startLoud));
+        AudioSource source = Camera.main.gameObject.AddComponent<AudioSource>();
+        source.clip = FindClip(s);
+        source.loop = true;
+        source.name = s;
+        if (startLoud)
+            source.Play();
+        AudioLoop loop = Camera.main.gameObject.AddComponent<AudioLoop>().Initialize(source,volume,startLoud);
+        Loops.Add(loop);
         return Loops[Loops.Count-1];
     }
+    /*
     public AudioLoop CreateRandomLoop(string[] s, Vector2 volumeRange, Vector2 pitchRange, Vector2 rateRange)
     {
         AudioClip[] clips = new AudioClip[s.Length];
@@ -80,7 +85,7 @@ public class AudioManager : MonoBehaviour
             clips[i] = FindClip(s[i]);
         return Camera.main.gameObject.AddComponent<RandomAudioLoop>().Initialize(clips, volumeRange, pitchRange, rateRange);
         
-    }
+    }*/
 
     public void TerminateSource(AudioSource a)
     {
@@ -102,10 +107,7 @@ public class AudioManager : MonoBehaviour
     {
         try
         {
-            l.sources[0].Stop();
-            Destroy(l.sources[0]);
-            Loops.Remove(l);
-            Destroy(l);
+            l.Cleanup();
         }
         catch (System.Exception e)
         {
@@ -131,32 +133,47 @@ public class AudioManager : MonoBehaviour
     }
 
 
+    void OnSceneLoad(Scene scene, LoadSceneMode mode)
+    {
+        switch (scene.name)
+        {
+            case "Menu":
+                StartCoroutine(DelayMenuMusic());
+                break;
+            case "MatteColorDrivingTest":
+                CreateLoop("Music_Gameplay",1,true);
+                break;
+
+        }
+    }
+
+    IEnumerator DelayMenuMusic()
+    {
+        AudioSource primary = CreateOneShot("Music_Menu_Intro", 1);
+        AudioLoop secondary = CreateLoop("Music_Menu_Loop", 1, false);
+        secondary.source.volume = .95f;
+        secondary.volume = .95f;
+        secondary.source.PlayScheduled(AudioSettings.dspTime + primary.clip.length);
+        yield return null;
+    }
 }
 
 
-public class AudioLoop :MonoBehaviour
+public class AudioLoop : MonoBehaviour
 {
     public float volume;
-    public AudioSource[] sources;
+    public AudioSource source;
     float capVolume = 1f;
     Coroutine fadeCor;
-
-    public AudioLoop() { }
-    public AudioLoop(AudioSource source, float capVolume, bool startLoud)
+    
+    public AudioLoop Initialize(AudioSource s, float capVolume, bool startLoud)
     {
-        sources = new AudioSource[1]{ source};
+        volume = startLoud ? 1 : 0;
+        source = s;
         this.capVolume = capVolume;
-        if (startLoud)
-        {
-            source.volume = capVolume;
-            volume = capVolume;
-        }
-        else
-        {
-            source.volume = 0;
-            volume = 0;
-        }
-               
+
+        return this;
+
     }
 
     /// <summary>
@@ -170,48 +187,45 @@ public class AudioLoop :MonoBehaviour
             StopCoroutine(fadeCor);
 
         if (toCapVolume)
-            fadeCor = StartCoroutine(fadeProcess(capVolume,duration));
+            fadeCor = StartCoroutine(FadeProcess(capVolume,duration));
         else
-            fadeCor = StartCoroutine(fadeProcess(0,duration));
+            fadeCor = StartCoroutine(FadeProcess(0,duration));
     }
     public void Fade(float destination, float duration)
     {
         if (fadeCor != null)
             StopCoroutine(fadeCor);
 
-        fadeCor = StartCoroutine(fadeProcess(destination, duration));
+        fadeCor = StartCoroutine(FadeProcess(destination, duration));
     }
 
-    IEnumerator fadeProcess(float destinationVolume, float duration)
+    IEnumerator FadeProcess(float destinationVolume, float duration)
     {
-        foreach (AudioSource a in sources) {
-            float startVolume = a.volume;
+            float startVolume = source.volume;
             float t = 0;
             while (t < duration)
             {
                 volume = Mathf.Lerp(startVolume, destinationVolume, t / duration);
-                a.volume = volume;
+                source.volume = volume;
                 t += Time.deltaTime;
                 yield return null;
             }
-        }
-
+        volume = destinationVolume;
+        source.volume = volume;
     }
+
 
     /// <summary>
     /// destroy externally to allow sanitary removal from arrays
     /// </summary>
-    public virtual void Cleanup()
+    public void Cleanup()
     {
-        foreach (AudioSource s in sources)
-        {
-            s.Stop();
-            if(s!=null)
-                Destroy(s);
-        }
+        source.Stop();
+        if(source!=null)
+            Destroy(source);
     }
 }
-
+/*
 public class RandomAudioLoop : AudioLoop
 {
     Coroutine loopCor;
@@ -259,3 +273,4 @@ public class RandomAudioLoop : AudioLoop
         Destroy(this, decayTime);
     }
 }
+*/
