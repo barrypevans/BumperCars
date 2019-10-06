@@ -72,6 +72,7 @@ public class CarSelect : MonoBehaviour
                 var playerIndex = playerControllerMappings.Count - 1;
                 cars[playerIndex].Pallette = carPallettes[0];
                 customizers.Add(new PlayerCustomizer(playerIndex, playerInputs[i], this, cars[playerIndex]));
+                MakeExclusive();
             }
         }
     }

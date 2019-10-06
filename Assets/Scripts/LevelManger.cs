@@ -14,7 +14,6 @@ public class LevelManger : MonoBehaviour
         if(Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
             PopulateGameBoard(20, 20);
         }
         else
