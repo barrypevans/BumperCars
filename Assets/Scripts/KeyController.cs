@@ -6,7 +6,7 @@ using UnityEngine;
 public class KeyController : MonoBehaviour
 {
     float rot = 0;
-    float speed = 10;
+    float speed = 20;
     void Update()
     {
         rot += speed*Time.deltaTime;
