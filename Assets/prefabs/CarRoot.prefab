@@ -36,7 +36,7 @@ GameObject:
   - component: {fileID: 7068853273396075540}
   - component: {fileID: 7068853273396075545}
   - component: {fileID: 7068853273396075542}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: CarRoot
   m_TagString: Car
   m_Icon: {fileID: 0}
@@ -72,6 +72,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c31e5ac86f799f40ab38c1583116b64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_lobotomize: 0
+  m_dontUsegameMan: 0
   CarName: 
   m_playerIndex: 0
   m_renderer: {fileID: 3775022569173029816}
@@ -197,7 +199,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7068853274705516451}
-  m_LocalRotation: {x: -0, y: -0, z: -0.21183757, w: -0.97730494}
+  m_LocalRotation: {x: -0, y: -0, z: 0.11527407, w: 0.9933337}
   m_LocalPosition: {x: 0.384, y: 0.485, z: -0.964}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_Children:

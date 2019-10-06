@@ -16,6 +16,8 @@ public class CarController : MonoBehaviour
 
     [SerializeField]
     private bool m_lobotomize = false;
+    [SerializeField]
+    private bool m_dontUsegameMan = false;
 
     private CameraController m_cameraController;
     public string CarName = "";
@@ -121,6 +123,8 @@ public class CarController : MonoBehaviour
             m_rigidbody = GetComponent<Rigidbody>();
             m_cameraController = m_camera.transform.parent.GetComponent<CameraController>();
             UpdatePallette(m_pallette);
+            if (m_dontUsegameMan)
+                Init(m_playerIndex, m_playerIndex);
         }
         else
         {
@@ -128,10 +132,12 @@ public class CarController : MonoBehaviour
         }
     }
 
-    public void Init(int inputIndex)
+    public void Init(int inputIndex, int playerIndex)
     {
+        print("init!");
+        m_playerIndex = playerIndex;
         if (null == m_inputManager)
-            m_inputManager = new InputManager(m_playerIndex);
+            m_inputManager = new InputManager(inputIndex);
         m_inputManager.Enable();
     }
 
@@ -185,7 +191,7 @@ public class CarController : MonoBehaviour
 
     private Vector3 GetStickAcceration()
     {
-        m_heading = Mathf.Atan2(m_inputManager.VerticalLeft, m_inputManager.HorizontalLeft);
+        m_heading = Mathf.Atan2(m_inputManager.VerticalLeftStick, m_inputManager.HorizontalLeftStick);
         return GetMajorCameraAxis() * kAcceleration * Time.deltaTime;
     }
 
@@ -205,7 +211,7 @@ public class CarController : MonoBehaviour
     private void Tilt()
     {
         if(!m_isBumping)
-            m_top.localRotation = Quaternion.Slerp(m_top.localRotation, Quaternion.Euler(0, 0, m_inputManager.HorizontalLeft * 8), Time.deltaTime * 10);
+            m_top.localRotation = Quaternion.Slerp(m_top.localRotation, Quaternion.Euler(0, 0, m_inputManager.HorizontalLeftStick * 8), Time.deltaTime * 10);
        // else
          //   m_top.localRotation = Quaternion.Slerp(Quaternion.Euler(0, m_spin, 0), Quaternion.Euler(0, 0, 0), ControlAmount);
     }
@@ -246,6 +252,8 @@ public class CarController : MonoBehaviour
 
     private IEnumerator Co_DeathAnim()
     {
+        if(GameManager.Instance != null)
+            GameManager.Instance.PlayerDied(m_playerIndex);
         AudioManager.instance.CreateOneShot("Falling", 1);
         m_rigidbody.isKinematic = true;
         yield return new WaitForSeconds(.5f);

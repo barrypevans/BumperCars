@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviour
 
     private void InitializeMainLevel()
     {
-        m_remainingPlayers = new List<int>() { 1,2,3,4};
+        m_remainingPlayers = new List<int>() {1,2,3,4};
 
         var cars = GameObject.FindObjectsOfType<CarController>();
         var carindex = 0;
@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour
             if (carindex < m_playerCount)
             {
                 car.Pallette = m_palletts[carindex];
-                car.Init(m_playerContollerMappings[carindex]);
+                car.Init(m_playerContollerMappings[carindex], carindex);
             }
             else
             {
@@ -70,7 +70,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void AwardWinner(int index)
+    private void AwardWinner(int index)
     {
         print("Player "+ index.ToString()+ " wins!");
     }
