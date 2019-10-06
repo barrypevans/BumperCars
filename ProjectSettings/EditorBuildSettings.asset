@@ -5,9 +5,15 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: d1c3109bdb54ad54c8a2b2838528e640
+    path: Assets/Scenes/Menu.unity
+    guid: 639b2296677766b48b9e54b4c966c1ec
+  - enabled: 1
+    path: Assets/Scenes/CarSelect.unity
+    guid: c981efe2573bfde40a29945d2e3b9f30
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 578fe9b8f1f4ea24f9e47db04a92e88e,
       type: 2}

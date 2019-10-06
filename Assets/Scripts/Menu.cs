@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Menu : MonoBehaviour
 {
     Animation menuPlayAnim;
+    public Animation camAnim;
 
     void Start()
     {
@@ -20,5 +22,14 @@ public class Menu : MonoBehaviour
     public void startGame()
     {
         menuPlayAnim.Play();
+        StartCoroutine(CamUp());
+    }
+
+    IEnumerator CamUp()
+    {
+        yield return new WaitForSeconds(1);
+        camAnim.Play();
+        yield return new WaitForSeconds(1);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 }
