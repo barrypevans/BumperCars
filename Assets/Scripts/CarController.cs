@@ -14,6 +14,8 @@ public class CarController : MonoBehaviour
     private static readonly float kTurnAcceleration = 5;
     private static readonly float kDeceleration = 30f;
 
+    private CameraController m_cameraController;
+
     private bool m_dead;
     private Coroutine m_bumpCo = null;
     private bool m_isBumping = false;
@@ -82,6 +84,7 @@ public class CarController : MonoBehaviour
     private void Start()
     {
         m_rigidbody = GetComponent<Rigidbody>();
+        m_cameraController = m_camera.transform.parent.GetComponent<CameraController>();
     }
 
     private void OnEnable()
@@ -166,6 +169,7 @@ public class CarController : MonoBehaviour
 
     private IEnumerator Co_Bump()
     {
+        m_cameraController.AddShake(1);
         ControlAmount = 0;
         for (int i=0; i<5; ++i)
         {
