@@ -122,7 +122,7 @@ public class CarController : MonoBehaviour
         {
             m_rigidbody = GetComponent<Rigidbody>();
             m_cameraController = m_camera.transform.parent.GetComponent<CameraController>();
-            UpdatePallette(m_pallette);
+           
             if (m_dontUsegameMan)
                 Init(m_playerIndex, m_playerIndex);
         }
@@ -130,6 +130,8 @@ public class CarController : MonoBehaviour
         {
             m_dead = true;
         }
+
+        UpdatePallette(m_pallette);
     }
 
     public void Init(int inputIndex, int playerIndex)
@@ -154,7 +156,8 @@ public class CarController : MonoBehaviour
 
     private void OnDisable()
     {
-        m_inputManager.Disable();
+        if(m_inputManager != null)
+            m_inputManager.Disable();
     }
 
     private void Movement()
@@ -289,9 +292,9 @@ public class CarController : MonoBehaviour
         window.SetColor("Color_E105854C", pallete.Window);
         antenna.SetColor("Color_FD2D49C0", pallete.Antenna);
         metal.SetColor("Color_FD2D49C0", pallete.Metal);
-        lights.SetColor("_BaseColor", pallete.Lights);
+        lights.SetColor("_EmissiveColor", pallete.Lights);
+
         CarName = pallete.CarName;
-        print(CarName);
     }
 
     [SerializeField]

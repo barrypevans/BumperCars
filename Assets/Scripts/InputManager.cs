@@ -67,7 +67,7 @@ public class InputManager
     {
         get
         {
-            return Input.GetKey(KeyCode.Joystick1Button0+20*m_index);
+            return Input.GetKey(KeyCode.Joystick1Button0 + 20 * m_index);
         }
     }
 
@@ -79,41 +79,19 @@ public class InputManager
         }
     }
 
-    public bool TapLeft
+    public bool LeftBumper
     {
         get
         {
-            if (HorizontalLeftStick < -0.5f && m_canTapLeft)
-            {
-                m_canTapLeft = false;
-                return true;
-            }
-            return false; 
+            return Input.GetKeyDown(KeyCode.Joystick1Button4 + 20 * m_index);
         }
     }
 
-    public bool TapRight
+    public bool RightBumper
     {
         get
         {
-            if (HorizontalLeftStick < -0.5f && m_canTapRight)
-            {
-                m_canTapRight = false;
-                return true;
-            }
-            return false;
+            return Input.GetKeyDown(KeyCode.Joystick1Button5 + 20 * m_index);
         }
     }
-
-    private bool m_canTapLeft;
-    private bool m_canTapRight;
-
-    public void Update()
-    {
-        if(HorizontalLeftStick > -0.5f)
-            m_canTapLeft = true;
-        if(HorizontalLeftStick < 0.5f)
-            m_canTapRight = true;
-    }
-
 }

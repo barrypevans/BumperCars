@@ -6,7 +6,7 @@ using System.Linq;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-    public static readonly string kMainLevelName = "MainLevel";
+    public static readonly string kMainLevelName = "Play";
 
     private int m_playerCount = -1;
     private int[] m_playerContollerMappings;
@@ -63,7 +63,7 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                Destroy(car);
+                Destroy(car.gameObject);
                 PlayerDied(carindex);
             }
             ++carindex;
@@ -80,7 +80,7 @@ public class GameManager : MonoBehaviour
         if (m_remainingPlayers.Count() == 2)
         {
             AwardWinner(index);
-            m_remainingPlayers.Remove(index);
         }
+        m_remainingPlayers.Remove(index);
     }
 }
