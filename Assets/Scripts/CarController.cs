@@ -15,13 +15,32 @@ public class CarController : MonoBehaviour
     private static readonly float kDeceleration = 30f;
 
     private CameraController m_cameraController;
-
+    public string CarName = "";
     private bool m_dead;
     private Coroutine m_bumpCo = null;
     private bool m_isBumping = false;
     [SerializeField]
     private int m_playerIndex = 0;
     private Vector2 m_stickLag;
+
+    [SerializeField]
+    private Renderer m_renderer = null;
+
+    [SerializeField]
+    private CarPalletteSO m_pallette = null;
+    public CarPalletteSO Pallette
+    {
+        get
+        {
+            return m_pallette;
+        }
+
+        set
+        {
+            m_pallette = value;
+            UpdatePallette(Pallette);
+        }
+    }
 
     public Color primaryPaintColor = Color.blue;
 
@@ -87,6 +106,7 @@ public class CarController : MonoBehaviour
     {
         m_rigidbody = GetComponent<Rigidbody>();
         m_cameraController = m_camera.transform.parent.GetComponent<CameraController>();
+        UpdatePallette(m_pallette);
     }
 
     private void OnEnable()
@@ -221,6 +241,27 @@ public class CarController : MonoBehaviour
             counter++;
             yield return new WaitForSeconds(.01f);
         }
+    }
+
+    private void UpdatePallette(CarPalletteSO pallete)
+    {
+        if (null == pallete) return;
+
+        var body = m_renderer.materials.Where(mat => mat.name.ToLower().Contains("carbody")).First();
+        var seat = m_renderer.materials.Where(mat => mat.name.ToLower().Contains("seat")).First();
+        var window = m_renderer.materials.Where(mat => mat.name.ToLower().Contains("windows")).First();
+        var antenna = m_renderer.materials.Where(mat => mat.name.ToLower().Contains("antennaball")).First();
+        var metal = m_renderer.materials.Where(mat => mat.name.ToLower().Contains("bumper")).First();
+        var lights = m_renderer.materials.Where(mat => mat.name.ToLower().Contains("headlights")).First();
+       
+        body.SetColor("Color_FD2D49C0", pallete.Body);
+        seat.SetColor("Color_FD2D49C0", pallete.Seat);
+        window.SetColor("Color_E105854C", pallete.Window);
+        antenna.SetColor("Color_FD2D49C0", pallete.Antenna);
+        metal.SetColor("Color_FD2D49C0", pallete.Metal);
+        lights.SetColor("_BaseColor", pallete.Lights);
+        CarName = pallete.CarName;
+        print(CarName);
     }
 
     [SerializeField]

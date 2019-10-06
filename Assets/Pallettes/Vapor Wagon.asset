@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9f02934f3ba858478698eb08170c9cb, type: 3}
+  m_Name: Vapor Wagon
+  m_EditorClassIdentifier: 
+  CarName: Vapor Wagon
+  Body: {r: 0.16, g: 0.006, b: 0.339, a: 0}
+  Seat: {r: 0.001, g: 0.09, b: 0.059, a: 0}
+  Window: {r: 0.629, g: 0.016, b: 0.158, a: 0}
+  Antenna: {r: 1, g: 0.038, b: 0, a: 0}
+  Metal: {r: 0.049, g: 0.062, b: 0.104, a: 0}
+  Lights: {r: 0.702, g: 0.396, b: 0, a: 0}
+  Tires: {r: 0.11, g: 0.11, b: 0.11, a: 0}
+  ExtraDetail1: {r: 0.5, g: 0.013, b: 0.06, a: 0}
+  ExtraDetail2: {r: 0, g: 0, b: 0, a: 0}
