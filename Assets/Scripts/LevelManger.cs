@@ -45,45 +45,89 @@ public class LevelManger : MonoBehaviour
         }   
     }
 
+    Vector2 lastCollision = new Vector2(-1,-1);
     public void TakeOutTile(Vector3 position,Color car1, Color car2)
     {
         RaycastHit[] hits = Physics.RaycastAll(position+ Vector3.up, Vector3.down);
-       
         var tileHits = hits.Where(hit => hit.collider.tag == "GroundTile");
+
         if (tileHits.Count() > 0)
         {
-            //Color adjacent tiles
-            Tile pingTile = tileHits.First().collider.GetComponent<Tile>();
-            if (matteColoring)
+            Tile pingTile = tileHits.FirstOrDefault().collider.GetComponent<Tile>();
+            var index = tiles.Where(tile => tile.Value == pingTile).FirstOrDefault();
+
+
+            //Prevent duplicate collision reads, prevent invalid tile reads
+            if (matteColoring && lastCollision!=index.Key && tiles.ContainsKey(index.Key) && tiles[index.Key] != null)
             {
-                var index = tiles.Where(tile => tile.Value == pingTile).First();
-                Color mix = Color.Lerp(car1, car2, .5f);
+                lastCollision = index.Key;
+                Color mix = Color.Lerp(car1,car2,.5f);
 
-                SetRelativeTileColor(index, new Vector2(1, 0), mix);
-                SetRelativeTileColor(index, new Vector2(-1, 0), mix);
-                SetRelativeTileColor(index, new Vector2(0, 1), mix);
-                SetRelativeTileColor(index, new Vector2(0, -1), mix);
+                //find a strong version of the mixed color
+                Vector3 normalColor = new Vector3(mix.r, mix.g, mix.b);
+                float absoluteRatio = 0;
+                if (normalColor.x > absoluteRatio)
+                    absoluteRatio = normalColor.x;
+                if (normalColor.y > absoluteRatio)
+                    absoluteRatio = normalColor.y;
+                if (normalColor.z > absoluteRatio)
+                    absoluteRatio = normalColor.z;
 
-                Vector3 colorAmp = new Vector3();
-                Color.RGBToHSV(mix, out colorAmp.x, out colorAmp.y, out colorAmp.z);
-                colorAmp.y *= .7f;
-                colorAmp.z *= 1.1f;
+                if (absoluteRatio != 0)
+                {
+                    absoluteRatio = 1f / absoluteRatio;
+                    normalColor *= absoluteRatio;
+                    mix = new Color(normalColor.x, normalColor.y, normalColor.z);
+                }
 
-                mix = Color.HSVToRGB(colorAmp.x, colorAmp.y, colorAmp.z);
-
-                SetRelativeTileColor(index, new Vector2(2, 0), mix);
-                SetRelativeTileColor(index, new Vector2(-2, 0), mix);
-                SetRelativeTileColor(index, new Vector2(0, 2), mix);
-                SetRelativeTileColor(index, new Vector2(0, -2), mix);
-                SetRelativeTileColor(index, new Vector2(1, 1), mix);
-                SetRelativeTileColor(index, new Vector2(1, -1), mix);
-                SetRelativeTileColor(index, new Vector2(-1, 1), mix);
-                SetRelativeTileColor(index, new Vector2(-1, -1), mix);
+                StartCoroutine(DelayedTileColoring(index,mix));
 
             }
                        
             pingTile.Destroy();
+            tiles.Remove(index.Key);
         }
+    }
+
+    private IEnumerator DelayedTileColoring(KeyValuePair<Vector2, Tile> index, Color mix)
+    {
+
+        SetRelativeTileColor(index, new Vector2(1, 0), mix);
+        SetRelativeTileColor(index, new Vector2(-1, 0), mix);
+        SetRelativeTileColor(index, new Vector2(0, 1), mix);
+        SetRelativeTileColor(index, new Vector2(0, -1), mix);
+
+        mix.a *= .5f;
+        yield return new WaitForSeconds(.5f);
+
+        SetRelativeTileColor(index, new Vector2(2, 0), mix);
+        SetRelativeTileColor(index, new Vector2(-2, 0), mix);
+        SetRelativeTileColor(index, new Vector2(0, 2), mix);
+        SetRelativeTileColor(index, new Vector2(0, -2), mix);
+        SetRelativeTileColor(index, new Vector2(1, 1), mix);
+        SetRelativeTileColor(index, new Vector2(1, -1), mix);
+        SetRelativeTileColor(index, new Vector2(-1, 1), mix);
+        SetRelativeTileColor(index, new Vector2(-1, -1), mix);
+
+        mix.a *= .4f;
+        yield return new WaitForSeconds(.2f);
+        SetRelativeTileColor(index, new Vector2(2, 1), mix);
+        SetRelativeTileColor(index, new Vector2(2, -1), mix);
+        SetRelativeTileColor(index, new Vector2(1, 2), mix);
+        SetRelativeTileColor(index, new Vector2(1, -2), mix);
+        SetRelativeTileColor(index, new Vector2(-2, 1), mix);
+        SetRelativeTileColor(index, new Vector2(-2, -1), mix);
+        SetRelativeTileColor(index, new Vector2(-1, 2), mix);
+        SetRelativeTileColor(index, new Vector2(-1, -2), mix);
+
+        mix.a *= .5f;
+        yield return new WaitForSeconds(.1f);
+        SetRelativeTileColor(index, new Vector2(3, 0), mix);
+        SetRelativeTileColor(index, new Vector2(-3, 0), mix);
+        SetRelativeTileColor(index, new Vector2(0, 3), mix);
+        SetRelativeTileColor(index, new Vector2(0, -3), mix);
+
+
     }
 
     private void SetRelativeTileColor(KeyValuePair<Vector2, Tile> index, Vector2 v, Color c)

@@ -8,6 +8,7 @@ public class Tile : MonoBehaviour
     int pastPaints = 0;
     public void Destroy()
     {
+        StopAllCoroutines();
         Destroy(gameObject);
     }
     public void LerpColor(Color c)
@@ -21,20 +22,22 @@ public class Tile : MonoBehaviour
     private IEnumerator ColorChange(Color c)
     {
         MeshRenderer m = GetComponent<MeshRenderer>();
-        Color startValue = new Color(m.material.color.r, m.material.color.g, m.material.color.b);
-        Color endValue = (startValue + c)/2f;
+        Color startValue = m.material.GetColor("_BaseColor");
 
         /*
-        //falloff
+        //falloff after reuse
         if (pastPaints >= 4)
             c.a = .1f;
         else
-            c.a = (4- pastPaints)/4f;
+            c.a = (4 - pastPaints) / 4f;
             */
+        Color endValue = Color.Lerp(startValue,c,c.a);
+        endValue.a = 1;
+
         float t = 0;
-        while (t < 2f)
+        while (t < 1f)
         {
-            m.material.SetColor("_BaseColor", Color.Lerp(startValue,endValue, t/2f));
+            m.material.SetColor("_BaseColor", Color.Lerp(startValue,endValue, t));
             t += Time.deltaTime;
             yield return null;
         }
