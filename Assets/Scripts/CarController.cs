@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Collider))]
@@ -13,6 +14,7 @@ public class CarController : MonoBehaviour
     private static readonly float kTurnAcceleration = 5;
     private static readonly float kDeceleration = 30f;
 
+    private bool m_dead;
     private Coroutine m_bumpCo = null;
     private bool m_isBumping = false;
     [SerializeField]
@@ -91,16 +93,16 @@ public class CarController : MonoBehaviour
 
     private void Update()
     {
-        
+        if (m_dead) return;
+
         Movement();
         if (!m_isBumping)
         {
             UpdateVisuals();
             Tilt();
         }
+        CheckForDeath();
 
-        //if (Input.GetKeyDown(KeyCode.B))
-          //  Bump(Vector3.right);
     }
 
     private void OnDisable()
@@ -175,11 +177,42 @@ public class CarController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-       
+        if (m_dead) return;
         if (collision.collider.tag == "Car")
         {
             Bump(Vector3.Normalize(transform.position - collision.collider.transform.position));
             LevelManger.Instance.TakeOutTile(collision.contacts[0].point);
+        }
+    }
+
+    private void CheckForDeath()
+    {
+        RaycastHit[] hits = Physics.RaycastAll(transform.position+ Vector3.up, Vector3.down,100);
+        bool groundHits = hits.Any(hit => hit.collider.tag == "GroundTile");
+        if(!groundHits && !m_dead && !m_isBumping)
+        {
+            m_dead = true;
+            StartCoroutine(Co_DeathAnim());
+        }
+    }
+
+    private IEnumerator Co_DeathAnim()
+    {
+        m_rigidbody.isKinematic = true;
+        yield return new WaitForSeconds(.5f);
+        var counter = 0;
+        while (counter < 10)
+        {
+            transform.localScale = Vector3.Lerp(transform.localScale, new Vector3(.5f, 2.0f, .5f), .3f);
+            counter++;
+            yield return new WaitForSeconds(.01f);
+        }
+        counter = 0;
+        while (counter < 10)
+        {
+            transform.transform.position += Vector3.down*8;
+            counter++;
+            yield return new WaitForSeconds(.01f);
         }
     }
 
