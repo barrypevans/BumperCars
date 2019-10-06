@@ -70,4 +70,12 @@ public class InputManager
             return Input.GetKey(KeyCode.Joystick1Button0+20*m_index);
         }
     }
+
+    public bool Submit
+    {
+        get
+        {
+            return Input.GetKeyDown(KeyCode.Joystick1Button0 + 20 * m_index);
+        }
+    }
 }
