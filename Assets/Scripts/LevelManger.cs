@@ -36,7 +36,7 @@ public class LevelManger : MonoBehaviour
             {
                 if (null != m_floorTile)
                 {
-                    tiles.Add(new Vector2(i,j),Instantiate(m_floorTile, new Vector3((i - (width / 2.0f)) * kCarLength, 0, (j - (length / 2.0f)) * kCarLength), Quaternion.identity).GetComponent<Tile>());
+                    tiles.Add(new Vector2(i,j),Instantiate(m_floorTile, new Vector3((i - (width / 2.0f)) * kCarLength, 0, (j - (length / 2.0f)) * kCarLength), Quaternion.identity).transform.GetChild(0).GetComponent<Tile>());
                 }
                 else
                     Debug.LogError("please supply a floor tile, dumbass.");
@@ -47,7 +47,7 @@ public class LevelManger : MonoBehaviour
     Vector2 lastCollision = new Vector2(-1,-1);
     public void TakeOutTile(Vector3 position,Color car1, Color car2)
     {
-        RaycastHit[] hits = Physics.RaycastAll(position+ Vector3.up, Vector3.down);
+        RaycastHit[] hits = Physics.RaycastAll(position+ Vector3.up*2, Vector3.down);
         var tileHits = hits.Where(hit => hit.collider.tag == "GroundTile");
 
         if (tileHits.Count() > 0)
