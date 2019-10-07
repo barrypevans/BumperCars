@@ -242,6 +242,8 @@ public class CarController : MonoBehaviour
             AudioManager.instance.CreateOneShot("CrashShortBump",1f);
             Bump(Vector3.Normalize(transform.position - collision.collider.transform.position));
             LevelManger.Instance.TakeOutTile(collision.contacts[0].point, primaryPaintColor, collision.gameObject.GetComponent<CarController>().primaryPaintColor);
+            GameObject starEmit = Instantiate(Resources.Load("StarEmitter")) as GameObject;
+            starEmit.transform.position = collision.GetContact(0).point;
         }
         else if(collision.collider.tag == "InvisWall")
         {
@@ -252,6 +254,8 @@ public class CarController : MonoBehaviour
             else
                 fromWall.z = 0;
             Bump(fromWall);
+            GameObject starEmit = Instantiate(Resources.Load("StarEmitter")) as GameObject;
+            starEmit.transform.position = collision.GetContact(0).point;
         }
     }
 
