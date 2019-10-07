@@ -53,10 +53,12 @@ public class Rotate : MonoBehaviour
     {
         if (!togCred)
         {
+            AudioManager.instance.TransitionMusic("Music_Credits");
             togCred = true;
         }
         else
         {
+            AudioManager.instance.TransitionMusic("Music_Menu");
             togCred = false;
         }
     }

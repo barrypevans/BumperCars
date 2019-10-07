@@ -136,7 +136,6 @@ public class CarController : MonoBehaviour
 
     public void Init(int inputIndex, int playerIndex)
     {
-        print("init!");
         m_playerIndex = playerIndex;
         if (null == m_inputManager)
             m_inputManager = new InputManager(inputIndex);
@@ -229,7 +228,7 @@ public class CarController : MonoBehaviour
         for (int i = 0; i < 5; ++i)
         {
             ControlAmount += .1f;
-            yield return new WaitForSeconds(.25f);
+            yield return new WaitForSeconds(.17f);
         }
         m_isBumping = false;
     }
@@ -239,9 +238,20 @@ public class CarController : MonoBehaviour
         if (m_dead) return;
         if (collision.collider.tag == "Car")
         {
-            AudioManager.instance.CreateOneShot("Crash", 1);
+            AudioManager.instance.CreateOneShot("Crash", .4f);
+            AudioManager.instance.CreateOneShot("CrashShortBump",1f);
             Bump(Vector3.Normalize(transform.position - collision.collider.transform.position));
             LevelManger.Instance.TakeOutTile(collision.contacts[0].point, primaryPaintColor, collision.gameObject.GetComponent<CarController>().primaryPaintColor);
+        }
+        else if(collision.collider.tag == "InvisWall")
+        {
+            AudioManager.instance.CreateOneShot("CrashShortBump", 1f);
+            Vector3 fromWall = new Vector3(transform.position.x> collision.collider.transform.position.x?1:-1f,0, transform.position.z > collision.collider.transform.position.z ? 1 : -1f);
+            if (Mathf.Abs(transform.position.x - collision.collider.transform.position.x) > Mathf.Abs(transform.position.z - collision.collider.transform.position.z))
+                fromWall.x = 0;
+            else
+                fromWall.z = 0;
+            Bump(fromWall);
         }
     }
 
@@ -260,7 +270,8 @@ public class CarController : MonoBehaviour
     {
         if(GameManager.Instance != null)
             GameManager.Instance.PlayerDied(m_playerIndex);
-        AudioManager.instance.CreateOneShot("Falling", 1);
+        AudioManager.instance.CreateOneShot("CrashShortBump", 1);
+        AudioManager.instance.CreateOneShot("Falling", .6f);
         m_rigidbody.isKinematic = true;
         yield return new WaitForSeconds(.5f);
         var counter = 0;
@@ -304,7 +315,7 @@ public class CarController : MonoBehaviour
 
     private void HonkBITCH()
     {
-        AudioManager.instance.CreateOneShot(honks[Random.Range(0,honks.Length-1)], 1);
+        AudioManager.instance.Honk(m_pallette.CarName);
     }
 
     [SerializeField]

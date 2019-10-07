@@ -44,7 +44,7 @@ public class LevelManger : MonoBehaviour
         }   
     }
 
-    Vector2 lastCollision = new Vector2(-1,-1);
+    Vector2 lastCollision = new Vector2(-5,-5);
     public void TakeOutTile(Vector3 position,Color car1, Color car2)
     {
         RaycastHit[] hits = Physics.RaycastAll(position+ Vector3.up*2, Vector3.down);
@@ -57,7 +57,7 @@ public class LevelManger : MonoBehaviour
 
 
             //Prevent duplicate collision reads, prevent invalid tile reads
-            if (matteColoring && lastCollision!=index.Key && tiles.ContainsKey(index.Key) && tiles[index.Key] != null)
+            if (matteColoring && lastCollision!=index.Key && tiles.ContainsKey(index.Key) && tiles[index.Key] != null && index.Key!=Vector2.zero)
             {
                 lastCollision = index.Key;
                 Color mix = Color.Lerp(car1,car2,.5f);
@@ -90,7 +90,6 @@ public class LevelManger : MonoBehaviour
 
     private IEnumerator DelayedTileColoring(KeyValuePair<Vector2, Tile> index, Color mix)
     {
-
         SetRelativeTileColor(index, new Vector2(1, 0), mix);
         SetRelativeTileColor(index, new Vector2(-1, 0), mix);
         SetRelativeTileColor(index, new Vector2(0, 1), mix);

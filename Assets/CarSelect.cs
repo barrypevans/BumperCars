@@ -71,6 +71,7 @@ public class CarSelect : MonoBehaviour
             if (playerLogedIn(i)) continue;
             if (playerInputs[i].Submit)
             {
+                AudioManager.instance.CreateOneShot("Controller Connected", .6f);
                 playerCount++;
                 playerControllerMappings.Add(i);
                 var playerIndex = playerControllerMappings.Count - 1;
@@ -183,8 +184,8 @@ public class CarSelect : MonoBehaviour
 
 
                 m_car.Pallette = m_daddy.carPallettes[CurrentSkin];
+                AudioManager.instance.Honk(m_car.Pallette.CarName);
             }
-
             if (m_inputManager.RightBumper)
             {
                 do
@@ -192,6 +193,7 @@ public class CarSelect : MonoBehaviour
                 while (lockedSkins.Contains(CurrentSkin));
                     
                 m_car.Pallette = m_daddy.carPallettes[CurrentSkin];
+                AudioManager.instance.Honk(m_car.Pallette.CarName);
             }
         }
 
@@ -209,6 +211,7 @@ public class CarSelect : MonoBehaviour
             m_daddy.lockInCount++;
             lockedSkins.Add(currentSkin);
             m_daddy.MakeExclusive();
+            AudioManager.instance.Rev(m_car.Pallette.CarName);
         }
 
         public void Unlock()

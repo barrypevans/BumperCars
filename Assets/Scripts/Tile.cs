@@ -8,6 +8,32 @@ public class Tile : MonoBehaviour
     int pastPaints = 0;
     public void Destroy()
     {
+        StartCoroutine(Collapse());
+    }
+    private IEnumerator Collapse()
+    {
+        Vector3 startPos = transform.position;
+        Vector3 crumblePos = transform.position;
+        crumblePos.y -= .3f;
+        Vector3 fallPos = crumblePos;
+        fallPos.y -= 5f;
+
+        AudioManager.instance.CreateOneShot("FallingDebris2",.5f);
+
+        float t = 0;
+        while (t < .5f)
+        {
+            transform.position = Vector3.Lerp(startPos,crumblePos,t/.5f);
+            t += Time.deltaTime;
+            yield return null;
+        }
+        t = 0;
+        while (t < 1f)
+        {
+            transform.position = Vector3.Lerp(crumblePos, fallPos, t);
+            t += Time.deltaTime;
+            yield return null;
+        }
         StopAllCoroutines();
         Destroy(gameObject);
     }

@@ -6,7 +6,7 @@ using System.Linq;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-    public static readonly string kMainLevelName = "Play";
+    public static readonly string kMainLevelName = "Gameplay";
 
     private int m_playerCount = -1;
     private int[] m_playerContollerMappings;
@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour
             m_playerContollerMappings = controllerMappings;
             m_palletts = pallettes;
 
+            AudioManager.instance.CreateOneShot("Car Peeling", .5f);
             SceneManager.LoadScene(kMainLevelName);
         }
     }
@@ -78,7 +79,9 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator Co_AwardWinner(int index)
     {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(1f);
+        CamOverlay.instance.Transition(false);
+        yield return new WaitForSeconds(2f);
         SceneManager.LoadScene("CarSelect");
     }
 

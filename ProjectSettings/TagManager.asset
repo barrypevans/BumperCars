@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Car
   - GroundTile
+  - InvisWall
   layers:
   - Default
   - TransparentFX

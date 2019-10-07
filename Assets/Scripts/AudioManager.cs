@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 public class AudioManager : MonoBehaviour
 {
@@ -46,17 +47,22 @@ public class AudioManager : MonoBehaviour
                 print("No clips detected in directory: 'Resources>Audio'");
             }
 
+
+            CreateLoop("Music_Menu", .6f, false);
+            CreateLoop("Music_Credits", .8f, false);
+            CreateLoop("Music_Gameplay", .6f, false);
+
             //prepare future scene loads
             SceneManager.sceneLoaded += OnSceneLoad;
             //mention first scene load
-            OnSceneLoad(SceneManager.GetActiveScene(), LoadSceneMode.Single);
+            TransitionMusic("Music_Menu");
         }
     }
 
     //Handle pitch and volume adjustment on caller end?
     public AudioSource CreateOneShot(string s, float volume)
     {
-        AudioSource oneShot = Camera.main.gameObject.AddComponent<AudioSource>();
+        AudioSource oneShot = gameObject.AddComponent<AudioSource>();
         oneShot.clip = FindClip(s);
         oneShot.name = oneShot.clip.name;
         oneShot.Play();
@@ -65,15 +71,15 @@ public class AudioManager : MonoBehaviour
         StartCoroutine(DelayedClipDestruction(oneShot));
         return oneShot;
     }
-    public AudioLoop CreateLoop(string s, float volume, bool startLoud)
+    public AudioLoop CreateLoop(string s, float capVolume, bool startLoud)
     {
-        AudioSource source = Camera.main.gameObject.AddComponent<AudioSource>();
+        AudioSource source = gameObject.AddComponent<AudioSource>();
         source.clip = FindClip(s);
         source.loop = true;
         source.name = s;
-        if (startLoud)
-            source.Play();
-        AudioLoop loop = Camera.main.gameObject.AddComponent<AudioLoop>().Initialize(source,volume,startLoud);
+        if (!startLoud) source.volume = 0;
+        source.Play();
+        AudioLoop loop = gameObject.AddComponent<AudioLoop>().Initialize(source,capVolume,startLoud);
         Loops.Add(loop);
         return Loops[Loops.Count-1];
     }
@@ -135,26 +141,226 @@ public class AudioManager : MonoBehaviour
 
     void OnSceneLoad(Scene scene, LoadSceneMode mode)
     {
-        switch (scene.name)
-        {
-            case "Menu":
-                StartCoroutine(DelayMenuMusic());
-                break;
-            case "MatteColorDrivingTest":
-                CreateLoop("Music_Gameplay",1,true);
-                break;
 
-        }
+        TransitionMusic("Music_"+scene.name);
+
     }
 
-    IEnumerator DelayMenuMusic()
+    private string previousTheme = "";
+    Coroutine menuIntroFade;
+    bool firstCreditsEntry = true;
+    public void TransitionMusic(string s)
     {
-        AudioSource primary = CreateOneShot("Music_Menu_Intro", 1);
-        AudioLoop secondary = CreateLoop("Music_Menu_Loop", 1, false);
-        secondary.source.volume = .95f;
-        secondary.volume = .95f;
-        secondary.source.PlayScheduled(AudioSettings.dspTime + primary.clip.length);
-        yield return null;
+        AudioLoop activeMusic = FindAudioLoop(s);
+        bool MenuOpen = (previousTheme == "Music_Credits" || previousTheme == "Music_Menu" || previousTheme == "Music_CarSelect");
+
+        AudioSource intro;
+        switch(previousTheme + ">" + s)
+        {
+            case ">Music_Menu":
+                intro = CreateOneShot("Music_MenuIntro", 1);
+                FindAudioLoop("Music_Menu").FadeAbsolute(true, 0f);
+                FindAudioLoop("Music_Menu").source.Stop();
+                FindAudioLoop("Music_Menu").source.PlayScheduled(AudioSettings.dspTime + intro.clip.length);
+                break;
+            case "Music_Gameplay>Music_CarSelect":
+                if (FindAudioSource("Music_MenuIntro") != null)
+                {
+                    TerminateSource(FindAudioSource("Music_MenuIntro"));
+                }
+                FindAudioLoop("Music_Gameplay").FadeAbsolute(false, 2f);
+
+                firstCreditsEntry = true;
+                intro = CreateOneShot("Music_MenuIntro", 1);
+                FindAudioLoop("Music_Menu").FadeAbsolute(true, 0f);
+                FindAudioLoop("Music_Menu").source.PlayScheduled(AudioSettings.dspTime + intro.clip.length);
+                break;
+            case "Music_Credits>Music_CarSelect":
+            case "Music_Credits>Music_Menu":
+                //fade in menu intro
+                //use menuintro if available
+                if (FindAudioSource("Music_MenuIntro"))
+                {
+                    //If fading menu intro out, stop
+                    if (menuIntroFade != null)
+                        StopCoroutine(menuIntroFade);
+                    //fade in menuIntro
+                    menuIntroFade = StartCoroutine(MenuThemeFade(true, 1f));
+                }
+                FindAudioLoop("Music_Menu").FadeAbsolute(true, 1f);
+                //fade out credits
+                FindAudioLoop("Music_Credits").FadeAbsolute(false,1f);
+                break;
+
+            case "Music_Menu>Music_Credits":
+                if (firstCreditsEntry)
+                {
+                    FindAudioLoop("Music_Credits").source.Play();
+                    FindAudioLoop("Music_Credits").FadeAbsolute(true, 0);
+                    firstCreditsEntry = false;
+                }
+                else
+                {
+                    FindAudioLoop("Music_Credits").FadeAbsolute(true, 1);
+                }
+                //Edge case: fade out music intro instead of loop, instead set loop to 0 so delayed doesn't sneak in
+                if (FindAudioSource("Music_MenuIntro"))
+                {
+                    FindAudioLoop("Music_Menu").FadeAbsolute(false, 0f);
+                    if (menuIntroFade != null)
+                        StopCoroutine(menuIntroFade);
+
+                    menuIntroFade = StartCoroutine(MenuThemeFade(false, 1f));
+                }
+                else
+                    FindAudioLoop("Music_Menu").FadeAbsolute(false, 1f);
+                break;
+            case "Music_CarSelect>Music_Menu":
+                break;
+            case "Music_Menu>Music_Gameplay":
+            case "Music_CarSelect>Music_Gameplay":
+                //cancel play scheduled
+                FindAudioLoop("Music_Menu").FadeAbsolute(false, 0f);
+                //Edge case: fade out music intro instead of loop
+                if (FindAudioSource("Music_MenuIntro"))
+                {
+                    if (menuIntroFade != null)
+                        StopCoroutine(menuIntroFade);
+
+                    menuIntroFade = StartCoroutine(MenuThemeFade(false, 1f));
+                }
+                else
+                    FindAudioLoop("Music_Menu").FadeAbsolute(false, 1f);
+                //fade in gameplay
+                AudioLoop gameplay = FindAudioLoop("Music_Gameplay");
+                gameplay.FadeAbsolute(true, 1f);
+                gameplay.source.Stop();
+                gameplay.source.Play();
+                break;
+        }
+
+        previousTheme = s;
+    }
+    AudioLoop FindAudioLoop(string s)
+    {
+        return Loops.Find(loop => loop.source.clip.name == s);
+    }
+    AudioSource FindAudioSource(string s)
+    {
+        return Sources.Find(source => source.clip.name == s);
+    }
+
+    IEnumerator MenuThemeFade(bool fadeIn, float duration)
+    {
+        AudioSource menuIntro = FindAudioSource("Music_MenuIntro");
+
+        if (menuIntro != null)
+        {
+            int start = fadeIn ? 0 : 1;
+            int end = fadeIn ? 1 : 0;
+            float t = 0;
+            while (t < duration)
+            {
+                menuIntro.volume = Mathf.Lerp(start, end, t / duration);
+                t += Time.deltaTime;
+                yield return null;
+            }
+            menuIntro.volume = end;
+        }
+        else
+            Debug.Log("No menuIntro playing");
+
+        menuIntroFade = null;
+
+    }
+
+
+
+    public void Honk(string carName)
+    {
+        string honkName = "RegularCarShortHonk";
+        float volume = 1f;
+        switch (carName)
+        {
+            case "Best Byon Buggy":
+                honkName = "Double_Honk";
+                volume = 1.2f;
+                break;
+            case "Car-Avaggio":
+                honkName = "RegularCarLongHonk";
+                volume = 1.4f;
+                break;
+            case "CritterMobile":
+                honkName = "Horn 2";
+                volume = .5f;
+                break;
+            case "Grey":
+                honkName = "RegularCarShortHonk";
+                volume = 1f;
+                break;
+            case "Midnight Strider":
+                honkName = "Honk_Irl";
+                volume = 1f;
+                break;
+            case "Skyblue Stallion":
+                honkName = "UICarHorn";
+                volume = 1f;
+                break;
+            case "Vapor Wagon":
+                honkName = "ToyHonk";
+                volume = 1.2f;
+                break;
+            default:
+                honkName = "RegularCarShortHonk";
+                volume = 1f;
+                break;
+        }
+
+
+        CreateOneShot(honkName, volume);
+    }
+    public void Rev(string carName)
+    {
+        string revName = "Engine Rev";
+        float volume = 1f;
+        switch (carName)
+        {
+            case "Best Byon Buggy":
+                revName = "Engine Rev 6";
+                volume = 1.5f;
+                break;
+            case "Car-Avaggio":
+                revName = "Engine Rev 5";
+                volume = 1.3f;
+                break;
+            case "CritterMobile":
+                revName = "Engine Rev 7";
+                volume = 1f;
+                break;
+            case "Grey":
+                revName = "Engine Rev 3";
+                volume = 1f;
+                break;
+            case "Midnight Strider":
+                revName = "Engine Rev 4";
+                volume = 1f;
+                break;
+            case "Skyblue Stallion":
+                revName = "Engine Rev 2";
+                volume = 1f;
+                break;
+            case "Vapor Wagon":
+                revName = "Engine Rev";
+                volume = 1.6f;
+                break;
+            default:
+                revName = "Engine Rev 2";
+                volume = 1f;
+                break;
+        }
+
+
+        CreateOneShot(revName, volume);
     }
 }
 
@@ -207,6 +413,7 @@ public class AudioLoop : MonoBehaviour
             {
                 volume = Mathf.Lerp(startVolume, destinationVolume, t / duration);
                 source.volume = volume;
+
                 t += Time.deltaTime;
                 yield return null;
             }
