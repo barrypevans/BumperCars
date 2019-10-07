@@ -152,6 +152,9 @@ public class CarController : MonoBehaviour
         Tilt();
         CheckForDeath();
 
+        if (m_inputManager.LeftBumper || m_inputManager.RightBumper)
+            HonkBITCH();
+
     }
 
     private void OnDisable()
@@ -295,6 +298,13 @@ public class CarController : MonoBehaviour
         lights.SetColor("_EmissiveColor", pallete.Lights);
 
         CarName = pallete.CarName;
+    }
+
+    private static readonly string[] honks = { "RegularCarShortHonk", "RegularCarLongHonk", "Sustained_Honk", "ToyHonk" };
+
+    private void HonkBITCH()
+    {
+        AudioManager.instance.CreateOneShot(honks[Random.Range(0,honks.Length-1)], 1);
     }
 
     [SerializeField]
