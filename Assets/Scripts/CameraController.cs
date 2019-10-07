@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.Rendering;
+using UnityEngine.Experimental.Rendering.HDPipeline;
 [ExecuteInEditMode]
 public class CameraController : MonoBehaviour
 {
     private float _trauma;
     [SerializeField] private GameObject _cameraBody;
-
+    [SerializeField] private Volume volume;
     private int _seed1;
     private int _seed2;
     private int _seed3;
@@ -27,6 +28,10 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
+        ChromaticAberration ca;
+        volume.profile.TryGet<ChromaticAberration>(out ca);
+
+        
 
         Vector3 offset = new Vector3(Mathf.PerlinNoise(_seed1 + 25 * Time.time, 0),
             Mathf.PerlinNoise(0, _seed2 + 25 * Time.time),
@@ -38,5 +43,7 @@ public class CameraController : MonoBehaviour
 
         _trauma -= 5.0f * Time.deltaTime;
         _trauma = Mathf.Max(_trauma, 0);
+        ca.intensity.value = _trauma*.5f;
+        _cameraBody.transform.LookAt(Vector3.zero);
     }
 }
