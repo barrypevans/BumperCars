@@ -74,12 +74,16 @@ public class GameManager : MonoBehaviour
     private void AwardWinner(int index)
     {
         print("Player "+ (index+1).ToString()+ " wins!");
+
+
         StartCoroutine(Co_AwardWinner(index));
     }
 
     private IEnumerator Co_AwardWinner(int index)
     {
         yield return new WaitForSeconds(1f);
+        LevelManger.Instance.Win();
+        yield return new WaitForSeconds(5.5f);
         CamOverlay.instance.Transition(false);
         yield return new WaitForSeconds(2f);
         SceneManager.LoadScene("CarSelect");

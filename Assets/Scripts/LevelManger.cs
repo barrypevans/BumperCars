@@ -84,12 +84,13 @@ public class LevelManger : MonoBehaviour
             }
                        
             pingTile.Destroy();
-            tiles.Remove(index.Key);
+            //tiles.Remove(index.Key);
         }
     }
 
     private IEnumerator DelayedTileColoring(KeyValuePair<Vector2, Tile> index, Color mix)
     {
+        SetRelativeTileColor(index, new Vector2(0, 0), mix);
         SetRelativeTileColor(index, new Vector2(1, 0), mix);
         SetRelativeTileColor(index, new Vector2(-1, 0), mix);
         SetRelativeTileColor(index, new Vector2(0, 1), mix);
@@ -126,6 +127,7 @@ public class LevelManger : MonoBehaviour
         SetRelativeTileColor(index, new Vector2(0, -3), mix);
 
 
+
     }
 
     private void SetRelativeTileColor(KeyValuePair<Vector2, Tile> index, Vector2 v, Color c)
@@ -135,4 +137,45 @@ public class LevelManger : MonoBehaviour
 
     }
 
+
+    public void Win()
+    {
+        float delay = 0f;
+        foreach(KeyValuePair<Vector2, Tile> t in tiles)
+        {
+            t.Value.gameObject.SetActive(true);
+            StartCoroutine(tileDance(t.Value, delay));
+            delay += .005f;
+        }
+    }
+
+    IEnumerator tileDance(Tile tile, float delay)
+    {
+        Vector3 startPos = tile.transform.parent.position;
+        Vector3 zeroPos = tile.transform.parent.position;
+        zeroPos.y = 0f;
+
+        Vector3 endPos = new Vector3(zeroPos.x, -70, zeroPos.z);
+
+        yield return new WaitForSeconds(delay);
+        float t = 0;
+        while (t < 1f)
+        {
+            tile.transform.parent.position = Vector3.Lerp(tile.transform.parent.position, zeroPos, t);
+            t += Time.deltaTime;
+            yield return null;
+        }
+        tile.transform.parent.position = zeroPos;
+
+        yield return new WaitForSeconds(1f);
+
+        t = 0;
+        while (t < .7f)
+        {
+            tile.transform.parent.position = Vector3.Lerp(zeroPos, endPos, t/.7f);
+            t += Time.deltaTime;
+            yield return null;
+        }
+        tile.transform.parent.position = endPos;
+    }
 }

@@ -12,8 +12,8 @@ public class Tile : MonoBehaviour
     }
     private IEnumerator Collapse()
     {
-        Vector3 startPos = transform.position;
-        Vector3 crumblePos = transform.position;
+        Vector3 startPos = transform.parent.position;
+        Vector3 crumblePos = transform.parent.position;
         crumblePos.y -= .3f;
         Vector3 fallPos = crumblePos;
         fallPos.y -= 5f;
@@ -23,19 +23,19 @@ public class Tile : MonoBehaviour
         float t = 0;
         while (t < .5f)
         {
-            transform.position = Vector3.Lerp(startPos,crumblePos,t/.5f);
+            transform.parent.position = Vector3.Lerp(startPos,crumblePos,t/.5f);
             t += Time.deltaTime;
             yield return null;
         }
         t = 0;
         while (t < 1f)
         {
-            transform.position = Vector3.Lerp(crumblePos, fallPos, t);
+            transform.parent.position = Vector3.Lerp(crumblePos, fallPos, t);
             t += Time.deltaTime;
             yield return null;
         }
         StopAllCoroutines();
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
     public void LerpColor(Color c)
     {

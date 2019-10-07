@@ -263,7 +263,7 @@ public class CarController : MonoBehaviour
     {
         RaycastHit[] hits = Physics.RaycastAll(transform.position + Vector3.up, Vector3.down, 100);
         bool groundHits = hits.Any(hit => hit.collider.tag == "GroundTile");
-        if (!groundHits && !m_dead && !m_isBumping)
+        if (!groundHits && !m_dead)//&& m_isBumping
         {
             m_dead = true;
             StartCoroutine(Co_DeathAnim());
